@@ -37,54 +37,364 @@
           <p style="text-align: left; font-size: 30px">
             slides:
             <a href="https://esriurl.com/ds2021-authentication"
-              ><code>https://esriurl.com/ds2021-authentication</code></a
+              >https://esriurl.com/ds2021-authentication</a
             >
           </p>
+
+          <!-- 
+					Two main authentication mechanisms exist for applications built with ArcGIS services. API keys allow quick access to popular locations services such as basemaps, routing and geocoding, and ArcGIS Identities provide access to private user and organization content for richer experiences. This session will cover the key differences and use cases between these approaches and how to integrate each into your applications.
+					-->
         </section>
 
         <section data-markdown data-background="img/2021/dev-summit/bg-2.png">
           <textarea data-template>
-						## Headline Here 2
+						## 2 Authentication Mechanisms
 
-						* Bullet [points here](http://hakim.se).
+						* API Keys
+						* ArcGIS Identity
+
+						There are others but these are the main ones most apps will use.
 					</textarea
           >
         </section>
 
-        <section
-          data-auto-animate
-          data-background="img/2021/dev-summit/bg-2.png"
-        >
-          <h2 data-id="code-title">Code Example</h2>
-          <pre
-            data-id="code-animation"
-          ><code class="hljs" data-trim data-line-numbers>
-						import React, { useState } from 'react';
+        <section data-markdown data-background="img/2021/dev-summit/bg-2.png">
+          <textarea data-template>
+						## API Keys (New Jan 2021)
 
-						function Example() {
-						  const [count, setCount] = useState(0);
+						* Used for location services (basemaps, routing, geocoding, ect...)
+						* Publically accessible
+						* Restricted to specific services
+						* Read private content (Developer accounts only)
+					</textarea
+          >
+        </section>
 
-						  return (
-						    ...
-						  );
+        <section data-markdown data-background="img/2021/dev-summit/bg-2.png">
+          <textarea data-template>
+						## API Keys (New Jan 2021)
+
+						* Accessible to **BOTH** ArcGIS Organizations **AND** Developer accounts
+						* Monitor regularly for unexpected usage
+					</textarea
+          >
+        </section>
+
+        <section data-markdown data-background="img/2021/dev-summit/bg-2.png">
+          <textarea data-template>
+						## ArcGIS Identity
+
+						* A.K.A "Named user authentication"
+						* ArcGIS users authorize your app to access services on their behalf (OAuth 2.0)
+						* Access private data through sharing settings
+						* Access services the user had privilages for
+					</textarea
+          >
+        </section>
+
+        <section data-markdown data-background="img/2021/dev-summit/bg-2.png">
+          <textarea data-template>
+						## Recommendations
+
+						* Use ArcGIS Identities when building apps that work with ArcGIS user and organziations.
+						* Use API keys for public or private facing apps where there is no need for ArcGIS users or private ArcGIS data.
+						* **DO NOT** conflate what TYPE of account you have to what method you SHOULD use.
+					</textarea
+          >
+        </section>
+
+        <section data-markdown data-background="img/2021/dev-summit/bg-2.png">
+          <textarea data-template>
+						## Account type ≠ Authentication type
+
+						<table style="font-size: 65%">
+						<thead>
+						<tr>
+						<th></th>
+						<th>ArcGIS Online Organization</th>
+						<th>ArcGIS Developer Account</th>
+						</tr>
+						</thead>
+						<tbody>
+						<tr>
+						<td>Services</td>
+						<td>Unlimited basemaps and search</td>
+						<td>Generous free tier</td>
+						</tr>
+						<tr>
+						<td># Users</td>
+						<td>1+</td>
+						<td>1</td>
+						</tr>
+						<tr>
+						<td>Usage</td>
+						<td>Consumes credits</td>
+						<td>Bills in USD ($)</td>
+						</tr>
+						<tr>
+						<td>API Keys</td>
+						<td>✓</td>
+						<td>✓</td>
+						</tr>
+						<tr>
+						<td>ArcGIS Identity</td>
+						<td>✓</td>
+						<td>✓</td>
+						</tr>
+						</tbody>
+						</table>
+					</textarea
+          >
+        </section>
+
+        <section data-markdown data-background="img/2021/dev-summit/bg-2.png">
+          <textarea data-template>
+						## Account type ≠ Authentication type
+
+						* You can use a developer account to make a app for users in an ArcGIS Organization (e.g. admin tools).
+						* You can use an ArcGIS Organization to build a public app that uses location services (e.g. public info app)
+					</textarea
+          >
+        </section>
+
+        <section data-markdown data-background="img/2021/dev-summit/bg-5.png">
+          <textarea data-template>
+						## API Keys
+					</textarea
+          >
+        </section>
+
+        <section data-markdown data-background="img/2021/dev-summit/bg-2.png">
+          <textarea data-template>
+						### Create an manage an API key
+
+						https://developers.arcgis.com/documentation/security-and-authentication/api-keys/
+					</textarea
+          >
+        </section>
+
+        <section data-markdown data-background="img/2021/dev-summit/bg-2.png">
+          <textarea data-template>
+						### Using an API Key - ArcGIS API for JavaScript
+
+						```js
+						require([
+							"esri/config",
+						], function (esriConfig) {
+							// set a global API key for all requests
+							esriConfig.apiKey= "YOUR-API-KEY";
+						});
+						```
+
+						`IdentityManager` is ignored and the API is sent on every request.
+					</textarea
+          >
+        </section>
+
+        <section data-markdown data-background="img/2021/dev-summit/bg-2.png">
+          <textarea data-template>
+						### Using an API Key - ArcGIS Rest JS 
+
+						```js
+						import { geocode } from "@esri/arcgis-rest-geocoding"
+						import { APIKey } from "@esri/arcgis-rest-auth"
+						
+						const apiKey = new APIKey("YOUR-API-KEY")
+
+						geocode({
+							address: "1600 Pennsylvania Ave NW, DC",
+							authentication: apiKey,
+						}).then(response => {
+							response.candidates[1].location // => { x: -77.036533, y: 38.898719, ... }
+						})
+						```
+
+						The API key is used for this request only. Reuse `apiKey` between requests.
+
+					</textarea
+          >
+        </section>
+
+        <section data-markdown data-background="img/2021/dev-summit/bg-2.png">
+          <textarea data-template>
+						### Using an API Key - ArcGIS Runtime API for .NET 
+
+						```cs
+						using Esri.ArcGISRuntime.UI.Controls;
+						using Esri.ArcGISRuntime.Mapping;
+						using System.Windows;
+
+						public partial class MainWindow : Window
+						{
+								public MainWindow()
+								{
+										InitializeComponent();
+
+										Esri.ArcGISRuntime.ArcGISRuntimeEnvironment.ApiKey = "YOUR_API_KEY";
+
+										MainMapView.Map = new Map(BasemapStyle.ArcGISNavigation);
+
+										MainMapView.SetViewpoint(new Viewpoint(
+												latitude: 34.027,
+												longitude: -118.805,
+												scale: 72223.819286));
+								}
 						}
-					</code></pre>
-        </section>
+						```
+					  
+						API key is sent to any service that can accept an API key.
 
-        <section data-markdown data-background="img/2021/dev-summit/bg-3.png">
-          <textarea data-template>
-						## Headline Here 3
-
-						* Bullet [points here](http://hakim.se).
 					</textarea
           >
         </section>
 
-        <section data-markdown data-background="img/2021/dev-summit/bg-4.png">
+        <section data-markdown data-background="img/2021/dev-summit/bg-2.png">
           <textarea data-template>
-						## Headline Here 3
+						### Demo API Keys 
 
-						* Bullet [points here](http://hakim.se).
+						@TODO...
+
+					</textarea
+          >
+        </section>
+
+        <section data-markdown data-background="img/2021/dev-summit/bg-2.png">
+          <textarea data-template>
+						### Tips for using API keys.
+
+						* Monitor API key on ArcGIS for Developers.
+						* Rotate keys freqently if the are used in public applications.
+						* Ensure keys are only allowed to access services you are using in your application.
+					</textarea
+          >
+        </section>
+
+        <section data-markdown data-background="img/2021/dev-summit/bg-5.png">
+          <textarea data-template>
+						### OAuth 2.0 Workflows - With Server
+						
+						<img src="img/server-side-application-authentication.png" style="width: 700px;">
+ 					</textarea
+          >
+        </section>
+
+        <section data-markdown data-background="img/2021/dev-summit/bg-5.png">
+          <textarea data-template>
+						## ArcGIS Identity
+					</textarea
+          >
+        </section>
+
+        <section data-markdown data-background="img/2021/dev-summit/bg-5.png">
+          <textarea data-template>
+						### What is an ArcGIS Identity?
+
+						* Represents a users profile in ArcGIS Online/Enterprise.
+						* Your apps can be authorized to access a users ArcGIS Identity via OAuth 2.0.
+						* Represented by an access token + expiration date with optional refresh token.
+ 					</textarea
+          >
+        </section>
+
+        <section data-markdown data-background="img/2021/dev-summit/bg-5.png">
+          <textarea data-template>
+						### Get Started
+						
+						Register your application to get a client id and client secret.
+
+						https://developers.arcgis.com/documentation/security-and-authentication/oauth-2.0/register-your-application/
+ 					</textarea
+          >
+        </section>
+
+        <section data-markdown data-background="img/2021/dev-summit/bg-5.png">
+          <textarea data-template>
+						### Getting an ArcGIS Identity (OAuth 2.0)
+						
+						* Use an ArcGIS API (JS API, Runtime, REST JS)
+						* Impliment OAuth 2.0 without an ArcGIS API
+ 					</textarea
+          >
+        </section>
+
+        <section data-markdown data-background="img/2021/dev-summit/bg-5.png">
+          <textarea data-template>
+						### OAuth 2.0 Workflows - Web, No Server
+						
+						<img src="img/browser-based-authentication.png" style="width: 700px;">
+ 					</textarea
+          >
+        </section>
+
+        <section data-markdown data-background="img/2021/dev-summit/bg-5.png">
+          <textarea data-template>
+						### OAuth 2.0 Workflows - Native, No Server
+						
+						<img src="img/native-application-authentication.png" style="width: 700px;">
+ 					</textarea
+          >
+        </section>
+
+        <section data-markdown data-background="img/2021/dev-summit/bg-5.png">
+          <textarea data-template>
+						### OAuth 2.0 Workflows - With Server
+						
+						<img src="img/server-side-application-authentication.png" style="width: 700px;">
+ 					</textarea
+          >
+        </section>
+
+        <section data-markdown data-background="img/2021/dev-summit/bg-5.png">
+          <textarea data-template>
+						### OAuth 2.0 Workflows - With Server
+						
+						<img src="img/server-side-application-authentication.png" style="width: 700px;">
+ 					</textarea
+          >
+        </section>
+
+        <section data-markdown data-background="img/2021/dev-summit/bg-2.png">
+          <textarea data-template>
+						### Demo: ArcGIS Identity w/ JS API
+
+					</textarea
+          >
+        </section>
+
+        <section data-markdown data-background="img/2021/dev-summit/bg-2.png">
+          <textarea data-template>
+						### Demo: API Keys w/ ArcGIS REST JS (Browser)
+
+					</textarea
+          >
+        </section>
+
+        <section data-markdown data-background="img/2021/dev-summit/bg-2.png">
+          <textarea data-template>
+						### Demo: API Keys w/ ArcGIS REST JS (Server)
+
+					</textarea
+          >
+        </section>
+
+        <section data-markdown data-background="img/2021/dev-summit/bg-2.png">
+          <textarea data-template>
+						## Why OAuth?
+
+						Trust. Users only provide their username and password to ArcGIS Online never to an app. In a world of regular data breaches this is important.
+
+					</textarea
+          >
+        </section>
+
+        <section data-markdown data-background="img/2021/dev-summit/bg-2.png">
+          <textarea data-template>
+						## Best practices
+
+						* Monitor and rotate API keys often.
+						* Evaluate the trade offs between server and serverless OAuth workflows.
+						* Always use HTTPS.
+
 					</textarea
           >
         </section>
@@ -106,6 +416,19 @@
       // - https://revealjs.com/config/
       Reveal.initialize({
         hash: true,
+        // This height and width are here for the left-aligned title slide.
+        // If you do not want that, you can remove these two settings and
+        // the presentation will be closer to OOTB-Reveal.js:
+        progress: true,
+        history: true,
+        center: true,
+        controls: false,
+        width: 1366,
+        height: 768,
+        transition: "fade", // none/fade/slide/convex/concave/zoom
+        margin: 0.125,
+
+        history: true,
 
         // Learn about plugins: https://revealjs.com/plugins/
         plugins: [RevealMarkdown, RevealHighlight, RevealNotes],

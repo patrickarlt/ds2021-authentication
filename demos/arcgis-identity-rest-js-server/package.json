@@ -1,0 +1,20 @@
+{
+  "name": "@esri/arcgis-rest-demo-express",
+  "version": "3.0.0",
+  "private": true,
+  "description": "Demo of @esri/arcgis-rest-* packages in an Express server",
+  "author": "",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "@esri/arcgis-rest-auth": "^3.0.0",
+    "@esri/arcgis-rest-request": "^2.25.0",
+    "cross-fetch": "^3.0.0",
+    "express": "^4.16.3",
+    "express-session": "^1.17.1",
+    "isomorphic-form-data": "^2.0.0",
+    "session-file-store": "^1.5.0"
+  },
+  "scripts": {
+    "start": "node server.js"
+  }
+}
